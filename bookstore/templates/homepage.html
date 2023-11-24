@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<!--Jumbotron-->
+<div class="jumbotron">
+    <h1 class="display-2 text-center"><b>Looking for something specific?</b></h1>
+    <p class="text-center pt-3" >"Reality doesn't always give us the life that we desire, but we can always find what we desire between the pages of books"</p>
+    <p class="text-center pb-5">— Adelise M. Cullens</p>
+    <!--Search form-->
+   
+    
+
+      <!-- search box -->
+      <div class="container">
+        <div class="row">
+
+            <div class="col-3 pr-0">
+              <form action="{{url_for('main.choosecategory', category = category)}}">
+                   <div class="btn-group">
+                      <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Categories
+                      </button>
+                     <div class="dropdown-menu dropdown-menu-right">
+                      <button class="dropdown-item" type="submit" name ="category" value="Fiction">Fiction</button>
+                      <button class="dropdown-item" type="submit" name ="category" value="Self-help">Self-help</button>
+                      <button class="dropdown-item" type="submit" name ="category" value="Invest">Invest</button>
+                     </div>
+                    </div>
+                </form>
+
+              </div>
+            <div class="col-6 pr-0 pl-0">
+               <form class="form ml-mr-auto" action="{{url_for('main.search')}}" >
+               <input class="form-control" type="search" placeholder="Enter name of desired book" aria-label="Search" name = "search" >
+              </div>
+              <div class="col-3 pl-0">
+              <button class="btn btn-outline-dark  ml-mr-auto " type="submit"><ion-icon name="search-outline"></ion-icon></button>
+            </div>
+          </form>
+        </div>
+     </div>
+    
+   
+  </div><!--End of Jumbotron-->
+    
+{% endblock %}
+
+{% block main %}
+
+<!--For loop displaying books-->
+
+<div class="container">
+  <div class = "row row-flex mr-ml-auto mt-3">
+{% for book in books%}
+<!--Display books from search bar-->
+<div class ="col-lg-4 pl-2 mt-4 mb-5 ">
+<div class="card">
+    <img class="card-img-top justify-content-center" src="{{ url_for('static', filename = 'img/'+book.image+'.jpg') }}" alt="Card image" style="width:353px ;height:400px;">
+    <div class="card-body" id="displaycard">
+        <h4 class="card-title text-truncate">{{ book.name }}</h4>
+    </div>
+
+    <div class="card-footer">
+        <a href="{{ url_for('main.selectbook', bookid = book.id) }}" class="btn btn-outline-dark ml-auto">More Details</a>
+        <a href="{{ url_for('main.order', book_id = book.id) }}" class="btn btn-outline-dark">Add to Basket</a>
+    </div>
+  </div><!--End of card-->
+</div><!--End of row-->
+{% endfor %}
+
+</div><!--End of row-->
+</div><!--End of container-->
+
+
+
+
+
+{% endblock %}

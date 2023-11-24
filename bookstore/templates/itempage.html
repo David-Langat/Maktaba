@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+
+{% for book in books%}
+<!--Item details-->           
+<div class="card">
+    <div class="row mb-5 mt-5">
+      <div class="col-lg-4 ">
+        <img  class = "card-img"src="{{ url_for('static', filename = 'img/'+book.image+'.jpg') }}" alt="Book image">
+      </div>
+      <div class="col-lg-8">
+        <div class="card-body">
+          <h5 class="card-title">{{book.name}}</h5>
+          <p class="card-text">
+            {{book.description}}
+          </p>
+          <p class="card-text"><small class="text-muted">Last updated 5 days ago</small></p>
+        </div>
+      </div>
+
+  </div>
+
+
+
+<div class="card text-center">
+<ul class="list-group list-group-flush">
+  <li class="list-group-item"><b>Author:</b> {{book.author}}</li>
+  <li class="list-group-item"><b>Publisher:</b> {{book.publisher}}</li>
+  <li class="list-group-item"><b>Release Year:</b> {{book.releaseyear}}</li>
+  <li class="list-group-item"><b>Price:</b> {{book.price}}</li>
+</ul>
+</div>
+
+<div class="container-fluid mt-5">
+<div class="row justify-content-center mb-5"> 
+  <a href="{{ url_for('main.order', book_id = book.id) }}" class="btn btn-outline-dark">Add to Basket</a>
+</div>
+
+</div>
+{% endfor %}
+
+
+{% endblock %}

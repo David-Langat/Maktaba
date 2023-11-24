@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="description" content="Bookstore">
+
+    <!-- Bootstrap Required Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    
+ 
+    
+    <!--To be displayed in tab on the browser-->
+    <title>Maktaba</title>
+    <style>
+      #displaycard{
+        font-size:medium;
+      }
+
+      html {
+        position: relative;
+        min-height: 100%;
+      }
+      body {
+         margin-bottom: 430px; /* Margin bottom by footer height */
+      }
+      .footer {
+         position: absolute;
+         bottom: 0;
+         width: 100%;
+         height: 430px; /* Set the fixed height of the footer here */
+         line-height: 60px; /* Vertically center the text there */
+       }
+
+    </style>
+
+    
+  </head>
+
+
+  <header>
+    <nav class = "navbar navbar-expand-lg navbar-light" style="background-color: rgb(235, 218, 196);">
+      
+
+        <!--Bookstore name and logo -->
+        <a class="navbar-brand" href="{{url_for('main.index')}}" target = "_self" title="Homepage">
+          <ion-icon name="book"></ion-icon>
+        </a>
+        <div class="navbar-nav"> 
+            <a class="navbar-brand" href="{{url_for('main.index')}}" target = "_self" title="Homepage">Maktaba</a>
+        </div>
+        
+          
+        
+
+        <!--Toggle button-->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+           <span class="navbar-toggler-icon"></span>
+        </button> 
+
+        <!--Navbar links-->
+        <div class="collapse navbar-collapse" id="navbarToggler">
+          <ul class="navbar-nav nav-pills ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="{{url_for('main.index')}}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" title="Basket" href="{{url_for('main.order')}}"><ion-icon name="basket" size="large"></ion-icon></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('main.development')}}">FAQ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('main.development')}}">Contact Us</a>
+            </li>
+          </ul>
+        </div>
+    </nav><!--End of Navbar-->
+
+    {% block head %}
+    
+    {% endblock %}
+  </header>
+
+ <!-- main page content goes in container -->
+ <div class="container-fluid">
+   <main>
+      {% block main %}
+
+      {% endblock %}
+   </main>
+  </div>
+
+
+  <!--Footer-->
+  <footer class="footer" style="background-color: rgb(235, 218, 196);">
+    <div class="container-fluid text-center text-md-left mt-5">
+      <div class="row">
+        <div  class="col-lg-4 pr-4">
+          <h5 class="text-uppercase"><ion-icon name="book"></ion-icon>Maktaba</h5>
+          <p>Books,books and more books</p>
+        </div>
+      
+      <!-- Grid column -->
+
+      <hr class="clearfix w-100 d-md-none pb-3">
+
+      <!-- Grid column -->
+      <div class="col-lg-4 mb-md-0 mb-3">
+
+        <!-- Links -->
+        <h5 class="text-uppercase"> Useful Links</h5>
+
+        <ul class="list-unstyled">
+          <li class = "nav-item">
+            <a href="{{url_for('main.development')}}" style ="color: black;">Account</a>
+          </li>
+          <li>
+            <a href="{{url_for('main.development')}}" style ="color: black;">Discussions</a>
+          </li>
+          <li>
+            <a href="{{url_for('main.development')}}" style ="color: black;">Blog</a>
+          </li>
+          <li>
+            <a href="{{url_for('main.development')}}" style ="color: black;">FAQ</a>
+          </li>
+        </ul>
+
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+      <div class="col-lg-4 mb-md-0 mb-3">
+
+        <!-- Links -->
+        <h5 class="text-uppercase">Contact Us</h5>
+
+        <ul class="list-unstyled">
+          <li>
+            <ion-icon name="home"></ion-icon>46 Webb Road, Cooks Hill,NSW 
+          </li>
+          <li>
+            <ion-icon name="call"></ion-icon> +61451-223-854
+          </li>
+          <li>
+            <ion-icon name="logo-instagram"></ion-icon> Maktaba_Bookstore
+          </li>
+          <li>
+            <ion-icon name="logo-facebook"></ion-icon> Maktaba_Bookstore
+          </li>
+        </ul>
+
+      </div>
+      <!-- Grid column -->
+
+    </div>
+    <!-- Grid row -->
+
+  </div>
+  <!-- Footer Links -->
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2023 Copyright:
+    <a href="/"> Maktaba</a>
+  </div>
+  <!-- Copyright -->
+
+      
+   </footer>  
+
+  <!--End of footer-->
+
+
+    <!--Separate Popper and Bootstrap JS -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+    
+    <!--Ionicons package-->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  </body>
+</html>

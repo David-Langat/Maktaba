@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+
+
+<!--For loop displaying books-->
+
+<!--For loop displaying books-->
+
+<div class="container">
+    <div class = "row row-flex mr-ml-auto mt-3">
+  {% for book in books%}
+  <!--Display books from search bar-->
+  <div class ="col-lg-4 pl-2 mt-4 ">
+  <div class="card">
+      <img class="card-img-top justify-content-center" src="{{ url_for('static', filename = 'img/'+book.image+'.jpg') }}" alt="Card image" style="width:353px ;height:400px;">
+      <div class="card-body" id="displaycard">
+          <h4 class="card-title text-truncate">{{ book.name }}</h4>
+      </div>
+  
+      <div class="card-footer">
+          <a href="{{ url_for('main.selectbook', bookid = book.id) }}" class="btn btn-outline-dark ml-auto">More Details</a>
+          <a href="{{ url_for('main.order', book_id = book.id) }}" class="btn btn-outline-dark">Add to Basket</a>
+      </div>
+    </div><!--End of card-->
+  </div><!--End of row-->
+  {% endfor %}
+  
+  </div><!--End of row-->
+  </div><!--End of container-->
+
+{% endblock %}
