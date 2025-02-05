@@ -1,6 +1,30 @@
+"""
+This module defines the blueprint and views for handling book ordering in a Flask web application.
+
+Imports:
+    datetime (datetime): Provides date and time functions.
+    flask.Blueprint: Used to create a modular application structure.
+    flask.render_template: Renders HTML templates for web pages.
+    flask.url_for: Generates URLs for the application.
+    flask.request: Handles incoming HTTP requests.
+    flask.session: Manages user session data.
+    flask.flash: Displays messages to the user.
+    flask.redirect: Redirects users to different routes.
+    
+Modules:
+    models (Book, Order): Defines database models for books and orders.
+    forms (CheckoutForm): Defines a form class for handling checkout.
+    db: The database instance used for storing and retrieving data.
+
+Functionality:
+    - Displays book details and handles orders.
+    - Processes checkout forms and stores orders in the database.
+    - Uses session management for user interactions.
+"""
+
+from datetime import datetime
 from flask import Blueprint, render_template, url_for, request, session, flash, redirect
 from .models import Book, Order
-from datetime import datetime
 from .forms import CheckoutForm
 from . import db
 
@@ -10,11 +34,13 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def index():
+    '''Display available books to the user'''
     books = Book.query.order_by(Book.name).all()
     return render_template('homepage.html', books = books)
 
 @bp.route('/books/')
 def choosecategory():
+    '''Category choice presented to the users'''
     category = request.args.get('category')
     print(category)
     #category ='%{}%'.format(category) # match substrings
@@ -25,6 +51,7 @@ def choosecategory():
 # Referred to as "Basket" to the user
 @bp.route('/order', methods=['POST','GET'])
 def order():
+    '''Handling the basket transactions'''
     book_id = request.values.get('book_id')
     # retrieve order if there is one
     if 'order_id'in session.keys():
@@ -41,8 +68,8 @@ def order():
             db.session.add(order)
             db.session.commit()
             session['order_id'] = order.id
-        except:
-            print('failed at creating a new order')
+        except Exception as e:
+            print(f'failed at creating a new order: {e}')
             order = None
     
     # calcultate totalprice
@@ -71,6 +98,7 @@ def order():
 # Delete specific basket items
 @bp.route('/deleteorderitem', methods=['POST'])
 def deleteorderitem():
+    '''Method to handle the removal of an item in the basket'''
     id=request.form['id']
     if 'order_id' in session:
         order = Order.query.get_or_404(session['order_id'])
@@ -87,6 +115,7 @@ def deleteorderitem():
 # Scrap basket
 @bp.route('/deleteorder')
 def deleteorder():
+    '''Methods that removes all items in the basket'''
     if 'order_id' in session:
         del session['order_id']
         flash('All items deleted')
@@ -95,6 +124,7 @@ def deleteorder():
 
 @bp.route('/checkout', methods=['POST','GET'])
 def checkout():
+    '''Present user with a checkout view'''
     form = CheckoutForm() 
     if 'order_id' in session:
         order = Order.query.get_or_404(session['order_id'])
@@ -121,16 +151,19 @@ def checkout():
 #display error
 @bp.route('/error')
 def error():
+    '''Error presented when view is missing/not found/unavailble'''
     return render_template('404.html', error= error)
 
 #display item page
 @bp.route('/itempage/<int:bookid>/')
 def selectbook(bookid):
+    '''Presents an items page'''
     books = Book.query.filter(Book.id == bookid)
     return render_template('itempage.html',books = books)
 #search
 @bp.route('/search')
 def search():
+    '''Enables the user to search for a book'''
     search = request.args.get('search')
     search ='%{}%'.format(search) # match substrings
     books = Book.query.filter(Book.name.like(search))#.all()
@@ -139,4 +172,5 @@ def search():
 #display error
 @bp.route('/developmentpage')
 def development():
+    '''Send user to page indicating views under development'''
     return render_template('developmentpage.html', development= development)
