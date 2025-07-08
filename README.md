@@ -1,197 +1,247 @@
-# Maktaba - Online Bookstore
+# Maktaba - A Flask-Based Online Bookstore
 
-Maktaba is a Flask-based online bookstore web application that allows users to browse books, add them to a shopping basket, and proceed to checkout. The application is built using Flask, SQLAlchemy, Bootstrap, and Flask-WTF.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
----
-
-## 📂 Project Structure
-
-```│   declaration_sheet.docx
-│   declaration_sheet.pdf
-│   main.py
-│
-├───bookstore
-│   │   forms.py        # Form validation using Flask-WTF
-│   │   models.py       # Database models (Book, Order)
-│   │   views.py        # Routes and business logic
-│   │   __init__.py     # Flask app factory and configurations
-│   │
-│   ├───static
-│   │   └───img         # Book images and assets
-│   │           bwtim.jpg
-│   │           d.jpg
-│   │           gvgl.jpg
-│   │           hoth.jpg
-│   │           hp1.jpg
-│   │           hp2.jpg
-│   │           htdsh.jpg
-│   │           htmmis.jpg
-│   │           jumbotron.jpg
-│   │           logo.jpg
-│   │           logo2.jpg
-│   │           myb.jpg
-│   │           rysbi.jpg
-│   │           tmoa.jpg
-│   │           tpom.jpg
-│   │           tsaongaf.jpg
-│   │
-│   ├───templates
-│   │       404.html          # Page Not Found error page
-│   │       505.html          # Internal Server Error page
-│   │       base.html         # Base template for layout
-│   │       category.html     # Books sorted by category
-│   │       checkout.html     # Checkout form for orders
-│   │       developmentpage.html  # Placeholder for under-development pages
-│   │       homepage.html     # Homepage displaying books
-│   │       itempage.html     # Individual book details
-│   │       order.html        # Shopping basket view
-│   │       search.html       # Search results page
-│   │
-│   └───__pycache__           # Compiled Python files
-│           forms.cpython-311.pyc
-│           models.cpython-311.pyc
-│           views.cpython-311.pyc
-│           __init__.cpython-311.pyc
-│
-└───instance
-        bookstore.sqbpro       # SQLite database project file
-        bookstore.sqlite       # Main database file
-        milton.sqlite          # Backup/alternative database
-```
+Maktaba is a full-featured online bookstore application built with Python and Flask. It demonstrates a clean implementation of the **Model-View-Controller (MVC)** architectural pattern, providing a seamless and responsive user experience for browsing, searching, and purchasing books.
 
 ---
 
-## 🛠️ Installation & Setup
+## Table of Contents
 
-### 1️⃣ Clone the Repository
+- [Key Features](#key-features)
+- [Application Architecture (MVC)](#application-architecture-mvc)
+- [Technologies Used](#technologies-used)
+- [Prerequisites](#prerequisites)
+- [Installation & Setup](#installation--setup)
+- [Running the Application](#running-the-application)
+- [Project Structure](#-project-structure)
+- [API Endpoints](#-api-endpoints)
+- [Database Schema](#-database-schema)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-```sh
-git clone https://github.com/yourusername/maktaba.git
-cd maktaba
+---
+
+## Key Features
+
+- **Product Catalog**: Browse a complete list of available books.
+- **Dynamic Filtering**: Sort books by category.
+- **Search Functionality**: Perform full-text searches for book titles.
+- **Shopping Cart**: Add, view, and remove items from the shopping cart.
+- **Secure Checkout**: Complete the purchase using a secure checkout form.
+- **Responsive UI**: Built with Bootstrap for a consistent experience on desktop and mobile devices.
+
+---
+
+## Application Architecture (MVC)
+
+This project strictly follows the **Model-View-Controller (MVC)** design pattern to ensure a clean separation of concerns, making the application scalable and easy to maintain.
+
+### 🏛️ Model
+The data layer is managed by **Flask-SQLAlchemy**. The models, defined in `bookstore/models.py`, represent the database schema for `Book` and `Order`. This layer handles all data logic, validation, and interactions with the SQLite database, acting as the single source of truth.
+
+```python
+# Example: bookstore/models.py
+class Book(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    # ... other fields
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.Boolean, default=False)
+    # ... other fields
 ```
 
-### 2️⃣ Create a Virtual Environment
+### 🎨 View
+The presentation layer is handled by **Jinja2 templates**, located in the `bookstore/templates/` directory. These templates are responsible for rendering the user interface. A base template (`base.html`) provides a consistent layout, which other templates extend to display dynamic data.
 
-```sh
-python3 -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
+```html
+<!-- Example: bookstore/templates/homepage.html -->
+{% extends 'base.html' %}
+{% block content %}
+  <div class="row">
+    {% for book in books %}
+      <div class="col-md-4">
+        <!-- Book display logic -->
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
 ```
 
-### 3️⃣ Install Dependencies
+### 🕹️ Controller
+The application's business logic resides in `bookstore/views.py`. This file acts as the controller, handling user requests, processing data via the Models, and rendering the appropriate Views. The **Flask Blueprint** (`bp`) is used to organize these routes into modular components.
 
-```sh
-pip install -r requirements.txt
+```python
+# Example: bookstore/views.py
+from .models import Book
+from flask import render_template, Blueprint
+
+bp = Blueprint('main', __name__)
+
+@bp.route('/')
+def index():
+    books = Book.query.order_by(Book.name).all()
+    return render_template('homepage.html', books=books)
 ```
 
-### 4️⃣ Set Up the Database
+---
 
-Initialize the database:
+## Technologies Used
 
-```sh
-flask db init
-flask db migrate -m "Initial migration."
-flask db upgrade
-```
+- **Backend**: Python, Flask
+- **ORM**: Flask-SQLAlchemy
+- **Frontend**: HTML, CSS, Jinja2
+- **UI Framework**: Bootstrap 4
+- **Forms**: Flask-WTF
+- **Database**: SQLite
 
-Alternatively, for SQLite, create the database:
+---
 
-```sh
-python
->>> from bookstore import db, create_app
->>> app = create_app()
->>> with app.app_context():
->>>     db.create_all()
->>> exit()
-```
+## Prerequisites
 
-### 5️⃣ Run the Flask Application
+- Python 3.8+
+- `pip` and `venv`
+
+---
+
+## Installation & Setup
+
+Follow these steps to get the application running locally.
+
+1.  **Clone the Repository**
+    ```sh
+    git clone https://github.com/yourusername/maktaba.git
+    cd maktaba
+    ```
+
+2.  **Create and Activate a Virtual Environment**
+    ```sh
+    # For macOS/Linux
+    python3 -m venv venv
+    source venv/bin/activate
+
+    # For Windows
+    python -m venv venv
+    .\venv\Scripts\activate
+    ```
+
+3.  **Install Dependencies**
+    *(Note: A `requirements.txt` file should be created for production use. For now, install dependencies manually.)*
+    ```sh
+    pip install Flask Flask-SQLAlchemy Flask-Bootstrap4 Flask-WTF
+    ```
+
+4.  **Initialize the Database**
+    Run the following commands in a Python shell to create the database schema.
+    ```sh
+    python
+    >>> from bookstore import create_app, db
+    >>> app = create_app()
+    >>> with app.app_context():
+    ...     db.create_all()
+    ...
+    >>> exit()
+    ```
+
+---
+
+## Running the Application
+
+Start the Flask development server with the following command:
 
 ```sh
 python main.py
 ```
 
-The application will be available at [http://127.0.0.1:5000](http://127.0.0.1:5000).
+The application will be available at `http://127.0.0.1:5000`.
 
 ---
 
-## 🚀 Usage Guide
+## 📂 Project Structure
 
-1. **Browse Books**: Visit the homepage to view available books.
-2. **Search**: Use the search bar to find a specific book.
-3. **Add to Basket**: Click on "Add to Basket" to add a book to your order.
-4. **Checkout**: Proceed to checkout and enter your details.
-5. **Confirm Order**: Once submitted, a confirmation message will appear.
-
----
-
-## ⚡ Technologies Used
-
-- **Flask** - Web framework for Python
-- **Flask-SQLAlchemy** - ORM for database interaction
-- **Flask-WTF** - Form handling and validation
-- **Bootstrap 4** - UI styling
-- **SQLite** - Default database
-
----
-
-## 📌 Routes Overview
-
-| Route               | Method | Description |
-|---------------------|--------|-------------|
-| `/`                | GET    | Displays the homepage with books |
-| `/books/`          | GET    | Shows books by category |
-| `/search`         | GET    | Search for books |
-| `/order`          | GET/POST | Manages the shopping basket |
-| `/checkout`       | GET/POST | Handles order submission |
-| `/deleteorder`    | GET    | Clears the basket |
-| `/deleteorderitem`| POST   | Removes an item from the basket |
-| `/itempage/<id>`  | GET    | Displays book details |
-| `/developmentpage`| GET    | Shows a development page placeholder |
-
----
-
-## 📚 Database Models
-
-### Book Model (`models.py`)
-
-```python
-class Book(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    description = db.Column(db.String(1000), nullable=False)
-    image = db.Column(db.String(60), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    category = db.Column(db.String(64), nullable=False)
-    author = db.Column(db.String(64), nullable=False)
-    publisher = db.Column(db.String(64), nullable=False)
-    releaseyear = db.Column(db.Integer, nullable=False)
 ```
-
-### Order Model
-
-```python
-class Order(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.Boolean, default=False)
-    firstname = db.Column(db.String(64))
-    surname = db.Column(db.String(64))
-    email = db.Column(db.String(128))
-    phone = db.Column(db.String(32))
-    totalcost = db.Column(db.Float)
-    date = db.Column(db.DateTime)
-    books = db.relationship("Book", secondary=orderdetails, backref="orders")
+Maktaba/
+│
+├── main.py                 # Application entry point
+├── README.md               # This file
+│
+├── bookstore/
+│   ├── __init__.py         # Initializes Flask app and extensions (App Factory)
+│   ├── views.py            # Controller: Handles routes and business logic
+│   ├── models.py           # Model: Defines database schema
+│   ├── forms.py            # Defines checkout and other forms
+│   │
+│   ├── templates/          # View: HTML templates
+│   │   ├── base.html
+│   │   ├── homepage.html
+│   │   └── ...
+│   │
+│   └── static/             # Static assets (CSS, JS, images)
+│       └── img/
+│
+└── instance/
+    └── milton.sqlite       # SQLite database file
 ```
 
 ---
 
-## 🚀 Development & Contribution
+## 🔌 API Endpoints
 
-- Fork the repository and clone it.
-- Create a new branch for feature development.
-- Submit a pull request (PR) with detailed changes.
+| Route               | Method     | Description                               |
+|---------------------|------------|-------------------------------------------|
+| `/`                 | `GET`      | Displays the homepage with all books.     |
+| `/books/`           | `GET`      | Shows books filtered by a category.       |
+| `/search`           | `GET`      | Displays search results for books.        |
+| `/order`            | `GET`/`POST` | Manages the shopping basket.              |
+| `/checkout`         | `GET`/`POST` | Handles the order submission process.     |
+| `/deleteorder`      | `GET`      | Clears all items from the basket.         |
+| `/deleteorderitem`  | `POST`     | Removes a specific item from the basket.  |
+| `/itempage/<id>`    | `GET`      | Displays the details of a single book.    |
+
+---
+
+## 📚 Database Schema
+
+The application uses two main tables:
+
+### `books`
+| Column      | Type        | Constraints              |
+|-------------|-------------|--------------------------|
+| `id`        | `Integer`   | Primary Key              |
+| `name`      | `String(64)`| Not Nullable             |
+| `description`| `String(1000)`| Not Nullable             |
+| `image`     | `String(60)`| Not Nullable             |
+| `price`     | `Float`     | Not Nullable             |
+| `category`  | `String(64)`| Not Nullable             |
+| `author`    | `String(64)`| Not Nullable             |
+| `publisher` | `String(64)`| Not Nullable             |
+| `releaseyear`| `Integer`  | Not Nullable             |
+
+### `orders`
+| Column      | Type        | Constraints              |
+|-------------|-------------|--------------------------|
+| `id`        | `Integer`   | Primary Key              |
+| `status`    | `Boolean`   | Default: `False`         |
+| `firstname` | `String(64)`|                          |
+| `surname`   | `String(64)`|                          |
+| `email`     | `String(128)`|                         |
+| `phone`     | `String(32)`|                          |
+| `totalcost` | `Float`     |                          |
+| `date`      | `DateTime`  |                          |
+
+A many-to-many relationship between `orders` and `books` is managed through the `orderdetails` association table.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please fork the repository, create a new branch for your feature, and submit a pull request.
 
 ---
 
 ## 🛡️ License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is licensed under the **MIT License**. See the [LICENSE](https://opensource.org/licenses/MIT) file for details.
