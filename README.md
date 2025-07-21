@@ -236,12 +236,6 @@ A many-to-many relationship between `orders` and `books` is managed through the 
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Please fork the repository, create a new branch for your feature, and submit a pull request.
-
----
-
 ## 🛡️ License
 
 This project is licensed under the **MIT License**. See the [LICENSE](https://opensource.org/licenses/MIT) file for details.
